@@ -1,0 +1,70 @@
+info in websites to be parsed
+
+
+# <span class="contenttitle">Arena Football (PS2)</span>    
+    
+#contenttitle 
+
+# <tr valign="top">
+# <td class="gameBioInfoHeader">Developer</td>
+# <td class="gameBioInfoText">
+# 		<a href="http://www.gamespy.com/company/026/026291.html">Tiburon</a>
+# </td>
+# </tr>
+
+
+
+
+# <ul>
+# 	<li><a href="http://cheats.gamespy.com/playstation-2-cheats/afl-2006/"><b>Cheats for Arena Football</b></a></li>
+# </ul>
+
+
+# <ul>
+# 		<li><a href="http://ps2.gamespy.com/playstation-2/afl-2006/578631p1.html">
+# <b>EA Signs Exclusive AFL License</b></a>
+# 		(01/10/05)
+# 		 - Electronic Arts gets hold of another exclusive sports license.
+# 		</li>
+# <!--578631-->
+# 			</ul>
+
+
+
+# <ul>
+# 		<li><a href="http://ps2.gamespy.com/playstation-2/afl-2006/688073p1.html">
+# <b><i>Arena Football</i></b></a>
+# 		(02/10/06)
+# 		 - Arena Football promises big hits and lots of action, but will the game score, or does it fumble?
+# 		</li>
+# <!--688073-->
+# 		</ul>
+
+
+
+# <div id="aroundTheNetwork1colBox">
+# <div class="colRightBoxTop"><h2><span class="colRightBoxHead">Around the Network</span></h2></div>
+# <div class="colRightBox">
+# <table class="aroundTheNetwork1col" cellspacing="0" cellpadding="0">
+# <tbody><tr valign="top">
+# 	<td class="aroundTheNetwork1colLinks">
+# 	<div><a href="http://ps2.ign.com/objects/723/723553.html">Arena Football</a> at IGN</div>
+# 	<div><a href="http://cheats.ign.com/ob2/068/723/723553.html">Arena Football Cheats</a> at IGN</div>
+	
+# 	<div><a href="http://ps2.gamespy.com/playstation-2/afl-2006/">Arena Football</a> at GameSpy</div>
+	
+	
+	
+	
+	
+# 	<div><a href="http://www.gamestats.com/objects/723/723553/">Arena Football</a> at GameStats</div>
+# 	<div><a href="http://www.cheatscodesguides.com/playstation-2-cheats/afl-2006/">Arena Football Cheats</a> at CCG</div>
+	
+	
+	
+	
+# 	</td>
+# </tr>
+# </tbody></table>
+# </div>
+# </div>

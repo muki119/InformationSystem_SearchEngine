@@ -1,5 +1,7 @@
 import bs4;
 import pickle;
 import numpy;
+from textProcessing import indexer
 
-print(pickle)
+
+indexer.indexer()
