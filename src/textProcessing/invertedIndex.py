@@ -1,6 +1,18 @@
 import pickle
 class InvertedIndex():
     def __init__(self,objectFilePath):
+        """ tokenDictionary{
+            word:{
+                totalDocumentFrequency:int,
+                postings:{
+                    documentName:{
+                        occurances:int,
+                        positions:[]
+                    }
+                }
+            }
+        }
+        """
         self.objectFilePath:str = objectFilePath
         self.dictionary:dict = self.__getDictionaryFile()
         
@@ -16,6 +28,7 @@ class InvertedIndex():
             return {}
         except Exception as error:
             print('An error has occurred: '+str(error))
+            return {}
     
     def __getitem__(self,key:str)->any:
         return self.dictionary.get(key)
@@ -24,24 +37,17 @@ class InvertedIndex():
         self.dictionary[key] = value
         
     def dumpDictionary(self)->None:
+        """"Saves Dictionary to file specified in object creation.
+            Will throw FileNotFoundError if unable to be found. 
+        """
         try:
             with open(self.objectFilePath,'wb') as fileToWrite: 
                 pickle.dump(self.dictionary,fileToWrite)
         except FileNotFoundError:
             print("File Cannot be found:"+self.objectFilePath)
             
-    def addWord(self,word:str,documentName:str,occurences:int,positions:list[int])->None:
-        # tokenDictionary{
-        #     word:{
-        #         totalDocumentFrequency:int,
-        #         postings:{
-        #             documentName:{
-        #                 occurances:int,
-        #                 positions:[]
-        #                             }
-        #         }
-        #     }
-        # }
+    def addWord(self,word:str,documentName:str,occurrences:int,positions:list[int])->None:
+        """Adds word to inverted index and adds document data to the index. """
         if word not in self.dictionary: # if word isnt in index - add it to index 
             self.dictionary[word]={
                 "totalDocumentFrequency":0,
@@ -51,12 +57,20 @@ class InvertedIndex():
             
         if documentName not in self[word]['postings']: # if document isnt in word postings - add it 
             self.dictionary[word]['postings'][documentName] = {
-                "occurences":occurences,
+                "occurrences":occurrences,
                 "positions":positions
             }  
             self.dictionary[word]['totalDocumentFrequency']+=1
-            self.dictionary[word]['totalOccurrences']+=occurences
+            self.dictionary[word]['totalOccurrences']+=occurrences
+            
+    def displayDictionary(self):
+        """Outputs dictionaries contents into file called 'showDictionary.txt'."""
+        with open('src/showDictionary.txt','w') as f:
+            for words,data in self.dictionary.items():
+                f.writelines(f"\n{words}")
+                for x , y in data.items():
+                    f.writelines(f" \n \tdata:{x} - values:{y}")
     
-inverted = InvertedIndex("src/what.pk1")
+# inverted = InvertedIndex("src/what.pk1")
 
-inverted.dumpDictionary()
+# inverted.dumpDictionary()

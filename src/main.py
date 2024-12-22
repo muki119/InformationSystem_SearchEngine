@@ -4,4 +4,4 @@ import numpy;
 from textProcessing import indexer
 
 
-indexer.indexer()
+indexer.buildIndex()
