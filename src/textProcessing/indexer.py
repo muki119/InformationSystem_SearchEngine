@@ -9,7 +9,7 @@ import re
 import string
 import pickle
 
-lemmatizer =WordNetLemmatizer()
+lemmatizer = WordNetLemmatizer()
 def indexer():
     try:
         videogamesLine=None
@@ -47,7 +47,17 @@ def createTokens(pageText:str):
     for key , values in indexDict.most_common(10):
         print(key,values)
  
-
+# tokenDictionary{
+#     word:{
+#         totalDocumentFrequency:int,
+#         postings:{
+#             documentName:{
+#                 occurances:int,
+#                 positions:[]
+#                             }
+#         }
+#     }
+# }
 
     return
 
