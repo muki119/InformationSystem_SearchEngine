@@ -1,6 +1,7 @@
 import pickle
 class InvertedIndex():
-    def __init__(self,objectFilePath):
+    """Inverted Index Data structure Made by Mugagga Kimera"""
+    def __init__(self,objectFilePath:str)->None:
         """ tokenDictionary{
             word:{
                 totalDocumentFrequency:int,
@@ -70,7 +71,3 @@ class InvertedIndex():
                 f.writelines(f"\n{words}")
                 for x , y in data.items():
                     f.writelines(f" \n \tdata:{x} - values:{y}")
-    
-# inverted = InvertedIndex("src/what.pk1")
-
-# inverted.dumpDictionary()

@@ -4,4 +4,7 @@ import numpy;
 from textProcessing import indexer
 
 
-indexer.buildIndex()
+
+
+if __name__ == "__main__":
+    indexer.Indexer('src/wordIndex.pk1').buildIndex()
