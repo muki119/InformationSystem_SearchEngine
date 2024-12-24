@@ -38,8 +38,8 @@ class InvertedIndex():
         self.dictionary[key] = value
         
     def dumpDictionary(self)->None:
-        """"Saves Dictionary to file specified in object creation.
-            Will throw FileNotFoundError if unable to be found. 
+        """Saves Dictionary to file specified in object creation.
+            Will create the file if it does not exist.
         """
         try:
             with open(self.objectFilePath,'wb') as fileToWrite: 

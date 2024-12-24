@@ -2,3 +2,6 @@
 /src/videogames
 *.pk1
 src/showDictionary.txt
+.vscode
+/.vscode
+profile_output
