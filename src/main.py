@@ -1,15 +1,18 @@
-import bs4;
-import pickle;
-import numpy;
-from textProcessing import indexer
 import cProfile
 import pstats
 
+from textProcessing import indexer
+from queryProcessing import queryProcessing
+
 
 def main():
-    indexer.Indexer('src/wordIndex.pk1').buildIndex()
+    ins = indexer.Indexer('src/wordIndex.pk1')
+    #ins.buildIndex()
+    queryProcess = queryProcessing.queryProcessing(ins.getIndex())
+    queryProcess.processQuery("50 cent ")
+    
 
 if __name__ == "__main__":
     cProfile.run('main()', 'profile_output')
     p = pstats.Stats('profile_output')
-    p.sort_stats('cumulative').print_stats(20)
+    p.sort_stats('cumulative').print_stats(30)

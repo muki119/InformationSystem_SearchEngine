@@ -1,24 +1,32 @@
+import concurrent.futures
+import re
+from collections import Counter
 import bs4
 import spacy
-import concurrent.futures
-from collections import Counter
-from nltk.corpus import stopwords
-import re
 from textProcessing import invertedIndex
+
+
 class Indexer():
-    stopwords = set(stopwords.words('english'))
+    __nlp = spacy.load("en_core_web_sm",disable=["textcat","ner"])
+    __textRegex = re.compile(r"[\|:!-,]|\t+|[^\w](\.)+")
     def __init__(self,path:str):
-        self.nlp = spacy.load("en_core_web_sm")
-        self.index = invertedIndex.InvertedIndex(path)
+        self.index:invertedIndex.InvertedIndex = invertedIndex.InvertedIndex(path)
         
-    def buildIndex(self):#
+    
+    def getIndex(self)->invertedIndex.InvertedIndex:
+        return self.index
+    def getMetadata(self)->invertedIndex.InvertedIndex:
+        return self.index.getMetadata()
+    
+    def buildIndex(self):
         try:
             videogamesLine:str=None
             with open('src/videogame-labels.csv') as videogameLabels :
                 videogamesLine = videogameLabels.readlines()[1:]#ignore first line which is just formatting  
+            
             print("Reading and Proccessing files...")
             
-            with concurrent.futures.ThreadPoolExecutor(max_workers=6) as executor: #multithreading to speed up the process  
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor: #multithreading to speed up the process  
                 executor.map(self.__processPage,videogamesLine) # tells threads to process the pages in the list
                 
             print("Building Index")
@@ -30,6 +38,7 @@ class Indexer():
             print(e)
     
     def __processPage(self,pageLineInfo):
+        """Processes a page and adds the data to the index"""
         try:
             pageData = pageLineInfo.rstrip().split(",") #split the page meta data
             pageText:str = self.__openPage(pageData) #open the page , clean it and get the text within it 
@@ -40,31 +49,30 @@ class Indexer():
             print("Error While Processing Page")
             print(e)
 
-       
         
     def __openPage(self,pageLineInfo:list[str])->str:
         # url,STRING : esrb,STRING : publisher,STRING : genre,STRING : developer
-        print("Opening Page: "+pageLineInfo[0],end="\r",flush=True)
+        #print("Opening Page: "+pageLineInfo[0],end="\r",flush=True)
         var1  = pageLineInfo[0].split("/")
         pageurl = "src/videogames"+"/"+var1[-1]
-        with open(pageurl) as videogamePage:
-            return self.__cleanPage(videogamePage)
+        with open(pageurl) as videogamePage: #open the html file
+            return self.__cleanPage(videogamePage) #clean the page and return the text within it
         
     def __cleanPage(self,page)->str:
         bs4page:object = bs4.BeautifulSoup(page,"html5lib")
-        for scriptsAndStyles in bs4page(["script","style","noembed",'noscript']):
+        for scriptsAndStyles in bs4page(["script","style","noembed",'noscript']): #remove scripts and styles and other non text elements
             scriptsAndStyles.decompose()
-        pageText:str= bs4page.get_text(separator="\n",strip=True)
+        pageText:str= bs4page.get_text(separator="\n",strip=True) #get the text from the page
         return pageText
         
     def createTokens(self,pageText:str)-> dict:
-        pageText = re.sub(r"[\|:!-,]|\t+|[^\w](\.)+", '', pageText) #remove annoying charachters 
-        tokenizedLemmatizedText = [t.lemma_.strip() for t in self.nlp(pageText,disable=["textcat","ner"],) ]# tokenizes and lemmatized the Incomming text 
-        filteredTokens = [ word for word in tokenizedLemmatizedText if word.lower() not in self.stopwords and len(word)>1] #filter to remove stopwords and insignificant charachters 
+        pageText = self.__textRegex.sub('',pageText) #remove annoying charachters 
+        tokenizedLemmatizedText = [t.lemma_.strip() for t in self.__nlp(pageText) if not t.is_stop and len(t)>1]# tokenizes and lemmatized the Incomming text -filtered to remove stopwords and insignificant charachters 
         # bigrams = nltk.bigrams(filteredTokens) #find bigrams 
         # bigramsFrequency = nltk.FreqDist(bigrams) # make frequency of bigrams
-        indexDict = Counter(filteredTokens) #store frequency of those lemmitized words
-        return indexDict
+        wordTokenFrequencyDictionary = Counter(tokenizedLemmatizedText) #store frequency of those lemmitized words
+        
+        return wordTokenFrequencyDictionary
  
 # test = Indexer('src/wordIndex.pk1')
 # ttext = test.openPage(["videogame/ps2.gamespy.com/zatch-bell.html","Teen","Bandai","Fighting","Eighting"])
