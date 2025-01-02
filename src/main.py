@@ -8,8 +8,8 @@ from queryProcessing import queryProcessing
 def main():
     ins = indexer.Indexer('src/wordIndex.pk1')
     #ins.buildIndex()
-    queryProcess = queryProcessing.queryProcessing(ins.getIndex())
-    queryProcess.processQuery("50 cent ")
+    queryProcess = queryProcessing.QueryProcessing(ins.getIndex())
+    queryProcess.processQuery("zatch bell super fighting game")
     
 
 if __name__ == "__main__":

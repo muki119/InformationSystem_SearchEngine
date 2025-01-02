@@ -1,20 +1,22 @@
 import concurrent.futures
-import re
 from collections import Counter
+
 import bs4
-import spacy
+
+from commonUtilities import commonUtilities
 from textProcessing import invertedIndex
 
 
 class Indexer():
-    __nlp = spacy.load("en_core_web_sm",disable=["textcat","ner"])
-    __textRegex = re.compile(r"[\|:!-,]|\t+|[^\w](\.)+")
+    """
+        This class Builds the index and metadata of the  
+    """
     def __init__(self,path:str):
         self.index:invertedIndex.InvertedIndex = invertedIndex.InvertedIndex(path)
         
-    
     def getIndex(self)->invertedIndex.InvertedIndex:
         return self.index
+    
     def getMetadata(self)->invertedIndex.InvertedIndex:
         return self.index.getMetadata()
     
@@ -66,12 +68,10 @@ class Indexer():
         return pageText
         
     def createTokens(self,pageText:str)-> dict:
-        pageText = self.__textRegex.sub('',pageText) #remove annoying charachters 
-        tokenizedLemmatizedText = [t.lemma_.strip() for t in self.__nlp(pageText) if not t.is_stop and len(t)>1]# tokenizes and lemmatized the Incomming text -filtered to remove stopwords and insignificant charachters 
+        tokenizedLemmatizedText = commonUtilities.CommonUtilities.tokenizeString(pageText)# tokenizes and lemmatized the Incomming text -filtered to remove stopwords and insignificant charachters removes any annoying charachters too.
         # bigrams = nltk.bigrams(filteredTokens) #find bigrams 
         # bigramsFrequency = nltk.FreqDist(bigrams) # make frequency of bigrams
         wordTokenFrequencyDictionary = Counter(tokenizedLemmatizedText) #store frequency of those lemmitized words
-        
         return wordTokenFrequencyDictionary
  
 # test = Indexer('src/wordIndex.pk1')
