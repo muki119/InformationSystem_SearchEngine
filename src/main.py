@@ -3,13 +3,17 @@ import pstats
 
 from textProcessing import indexer
 from queryProcessing import queryProcessing
+from commonUtilities import commonUtilities
 
 
 def main():
     ins = indexer.Indexer('src/wordIndex.pk1')
-    #ins.buildIndex()
+    # ins.buildIndex()
     queryProcess = queryProcessing.QueryProcessing(ins.getIndex())
-    queryProcess.processQuery("zatch bell super fighting game")
+    queryProcess.processQuery('Sports Genre Games')
+    # while True:
+    #     query = str(input("Input query: ")).strip()
+        
     
 
 if __name__ == "__main__":

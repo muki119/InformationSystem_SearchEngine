@@ -11,18 +11,22 @@ class QueryProcessing():
         self.metadata = self.index.getMetadata()
 
     def processQuery(self,inputQuery:str)->None:
+
         self.queryTokens = commonUtilities.CommonUtilities.tokenizeString(inputQuery) # tokenise the query
         self.allDocumentIds = self.__loadDocumentIds()            
         self.documentsVector  = np.zeros((len(self.queryTokens),len(self.allDocumentIds)))#[[] for i in range(len(self.queryTokens))]# create a vectorised query
         self.queryVector = self.queryTfIdf()
         
+        print(f'Searching for:{self.queryTokens}')
         with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
             executor.map(self.__vectoriseDocuments,[(documentId,collumn) for collumn,documentId in enumerate(self.allDocumentIds)])
         
         similarityScores = sorted(self.findCosineSimilarity(),key= lambda docScorePair:docScorePair[1],reverse=True)
         
-        for docName , similarity in similarityScores[:10]:
-            print(f'{docName} has a similaity of {similarity*100}%')
+        print(f'from {self.documentsVector.shape[1]}')
+        for docName , similarity,vec in similarityScores[:10]:
+            print(f'{docName} has a similaity of {similarity*100}%,{vec}')
+
     
     def __loadDocumentIds(self):
         documentIds = []
@@ -53,10 +57,14 @@ class QueryProcessing():
                 self.documentsVector [row,collumn] = 0 #if the term is not in the document the idf score is 0
                 
     def __computeIdfScore(self,documentId:str,term:str)->float: #compute tfidf score on documents with the tokens
-        termFrequency = self.__termFrequency(documentId,term)
-        documentFrequency = self.__inverseDocumentFrequency(term)
-        tfIdf = termFrequency*documentFrequency
-        return tfIdf 
+        try:
+            termFrequency = self.__termFrequency(documentId,term)
+            documentFrequency = self.__inverseDocumentFrequency(term)
+            metadataditionalscore = 300 if term in self.metadata[documentId]["gameInformation"] else 1
+            tfIdf = termFrequency*documentFrequency*metadataditionalscore
+            return tfIdf 
+        except Exception as e:
+            print(e)
     
     def findCosineSimilarity(self): #find the cosine similarity between each document and the queries 
         #normalise document vectors lengths 
@@ -73,7 +81,7 @@ class QueryProcessing():
         
         for index in range(self.documentsVector.shape[1]):
             cosignSimilarity = np.dot(self.queryVector.T,self.documentsVector[:,index])
-            resultsTuple.append((self.allDocumentIds[index],cosignSimilarity))
+            resultsTuple.append((self.allDocumentIds[index],cosignSimilarity,self.documentsVector[:,index]))
         
         return resultsTuple
         #do sclar product for each document on each term 

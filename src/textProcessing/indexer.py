@@ -45,16 +45,19 @@ class Indexer():
             pageData = pageLineInfo.rstrip().split(",") #split the page meta data
             pageText:str = self.__openPage(pageData) #open the page , clean it and get the text within it 
             tokenFreqdist:dict = self.createTokens(pageText) # create tokens ftom the text and get the frequency of each token ,store in a dictionary.
+            var1=[]
+            for val in pageData[1:]: # tokenise metadata and put it into a tuple
+                var1+=commonUtilities.CommonUtilities.tokenizeString(val)
             for token , freq in tokenFreqdist.items():
-                self.index.addWord(token,pageData[0],freq,[1,2,4,5,6]) #add the token data to the index.
+                self.index.addWord(token,pageData[0],freq,[1,2,4,5,6],tuple(var1)) #add the token data to the index.
         except Exception as e:
             print("Error While Processing Page")
+            print(f'error data {pageData}')
             print(e)
 
         
     def __openPage(self,pageLineInfo:list[str])->str:
         # url,STRING : esrb,STRING : publisher,STRING : genre,STRING : developer
-        #print("Opening Page: "+pageLineInfo[0],end="\r",flush=True)
         var1  = pageLineInfo[0].split("/")
         pageurl = "src/videogames"+"/"+var1[-1]
         with open(pageurl) as videogamePage: #open the html file
@@ -69,8 +72,6 @@ class Indexer():
         
     def createTokens(self,pageText:str)-> dict:
         tokenizedLemmatizedText = commonUtilities.CommonUtilities.tokenizeString(pageText)# tokenizes and lemmatized the Incomming text -filtered to remove stopwords and insignificant charachters removes any annoying charachters too.
-        # bigrams = nltk.bigrams(filteredTokens) #find bigrams 
-        # bigramsFrequency = nltk.FreqDist(bigrams) # make frequency of bigrams
         wordTokenFrequencyDictionary = Counter(tokenizedLemmatizedText) #store frequency of those lemmitized words
         return wordTokenFrequencyDictionary
  
