@@ -7,9 +7,9 @@ from commonUtilities import commonUtilities
 from textProcessing import invertedIndex
 
 
-class Indexer():
+class Indexer:
     """
-        This class Builds the index and metadata of the  
+        This class Builds the inverted index and metadata dictionary for the collection of documents.
     """
     def __init__(self,path:str):
         self.index:invertedIndex.InvertedIndex = invertedIndex.InvertedIndex(path)
@@ -22,11 +22,10 @@ class Indexer():
     
     def buildIndex(self):
         try:
-            videogamesLine:str=None
             with open('src/videogame-labels.csv') as videogameLabels :
                 videogamesLine = videogameLabels.readlines()[1:]#ignore first line which is just formatting  
             
-            print("Reading and Proccessing files...")
+            print("Reading and Processing files...")
             
             with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor: #multithreading to speed up the process  
                 executor.map(self.__processPage,videogamesLine) # tells threads to process the pages in the list
@@ -42,20 +41,19 @@ class Indexer():
     def __processPage(self,pageLineInfo):
         """Processes a page and adds the data to the index"""
         try:
-            pageData = pageLineInfo.rstrip().split(",") #split the page meta data
+            pageData = pageLineInfo.rstrip().split(",") #split the page metadata
             pageText:str = self.__openPage(pageData) #open the page , clean it and get the text within it 
             tokenFreqdist:dict = self.createTokens(pageText) # create tokens ftom the text and get the frequency of each token ,store in a dictionary.
             var1=[]
             for val in pageData[1:]: # tokenise metadata and put it into a tuple
                 var1+=commonUtilities.CommonUtilities.tokenizeString(val)
             for token , freq in tokenFreqdist.items():
-                self.index.addWord(token,pageData[0],freq,[1,2,4,5,6],tuple(var1)) #add the token data to the index.
+                self.index.addWord(token.lower(),pageData[0],freq,[1,2,4,5,6],tuple(var1)) #add the token data to the index.
         except Exception as e:
             print("Error While Processing Page")
             print(f'error data {pageData}')
             print(e)
 
-        
     def __openPage(self,pageLineInfo:list[str])->str:
         # url,STRING : esrb,STRING : publisher,STRING : genre,STRING : developer
         var1  = pageLineInfo[0].split("/")

@@ -1,5 +1,5 @@
 import pickle
-class InvertedIndex():
+class InvertedIndex:
     """Inverted Index Data structure Made by Mugagga Kimera"""
     def __init__(self,objectFilePath:str)->None:
         """ tokenDictionary{
@@ -16,8 +16,8 @@ class InvertedIndex():
         """
         self.__objectFilePath:str = objectFilePath
         self.__metadataFilePath:str = 'src/wordMetadata.pk1'
-        self.dictionary = self.__getDictionaryFile()
-        self.metadata = self.__getMetadataFile()
+        self.dictionary = self.__getDictionaryFile() # dictionary where the inverted index is stored
+        self.metadata = self.__getMetadataFile() # index of file metadata
     
     def __getFile(self,filePath:str)->dict:
         try:
