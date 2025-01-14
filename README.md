@@ -19,7 +19,7 @@ python -m pip install -r requirements.txt
 ```
 
 ### Usage
-#### By 
+#### By default - stemming will be used and no query expansion will be used
 #### Unix / Macos
 ```bash
 python main.py
@@ -30,3 +30,35 @@ python main.py
 py main.py
 ```
 
+# Turning on Lemmatization or Query expansion
+### In the "main.py" file there will be code as follows
+```python
+def main():
+    SearchEngineIns = SearchEngine(True)
+    SearchEngineIns.search()
+```
+
+### To change to Lemmatization , set the true value to false.
+```python
+def main():
+    SearchEngineIns = SearchEngine(False)
+    SearchEngineIns.search()
+```
+### Then delete the data folder and run the program.
+
+## Query Expansion
+### To enable query expansion go the the main function in main.py
+```python
+def main():
+    SearchEngineIns = SearchEngine(True)
+    SearchEngineIns.search()
+```
+
+### Add another paramter with the value of true to the Search engine initiatior
+```python
+def main():
+    SearchEngineIns = SearchEngine(True,True)
+    SearchEngineIns.search()
+```
+
+### Then re-run the program

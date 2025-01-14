@@ -97,7 +97,7 @@ class QueryProcessing:
 
     def __computeIdfScore(self, documentId: str,term: str) -> float:  # compute tfidf score on documents with the tokens
         try:
-            metadataAdditionalscore = 1 if term in self.metadata[documentId]["gameInformation"] else 1
+            metadataAdditionalscore =3 if term in self.metadata[documentId]["gameInformation"] else 1
             termFrequency = self.__termFrequency(documentId, term, metadataAdditionalscore)
             documentFrequency = self.__inverseDocumentFrequency(term, metadataAdditionalscore)
             tfIdf = termFrequency * documentFrequency
