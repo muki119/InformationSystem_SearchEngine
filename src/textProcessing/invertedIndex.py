@@ -1,7 +1,9 @@
 import pickle
+import os
 class InvertedIndex:
     """Inverted Index Data structure Made by Mugagga Kimera"""
     def __init__(self,objectFilePath:str)->None:
+        """If given one file path , will attempt to find metadata file from same directory"""
         """ tokenDictionary{
             word:{
                 totalDocumentFrequency:int,
@@ -14,17 +16,23 @@ class InvertedIndex:
             }
         }
         """
-        self.__objectFilePath:str = objectFilePath
-        self.__metadataFilePath:str = 'src/wordMetadata.pk1'
+        self.filePathDirectory = os.path.dirname(objectFilePath)
+        self.__objectFilePath:str = self.filePathDirectory+"/wordIndex.pk1"
+        self.__metadataFilePath:str = self.filePathDirectory + "/documentMetadata.pk1"
         self.dictionary = self.__getDictionaryFile() # dictionary where the inverted index is stored
         self.metadata = self.__getMetadataFile() # index of file metadata
-    
-    def __getFile(self,filePath:str)->dict:
+
+    def __len__(self):
+        return len(self.dictionary)
+    def __getFile(self,filePath:str,isMetadata:bool = False)->dict:
         try:
-            with open(filePath,'rb') as fileToRead:
+            with open(filePath,'rb') as fileToRead: # open the file
+                print(f'Loaded:{filePath}')
                 return pickle.load(fileToRead)
+            # if it's not a file but a file path
         except FileNotFoundError: # if file not found
-            print("File not found , file will be created on dump")
+            print(f'File :{filePath} not found ... File will be created on dump')
+            self.__createFilePath(filePath)
             return dict()
         except EOFError: # END OF FILE (empty file)
             print("File is empty")
@@ -32,12 +40,21 @@ class InvertedIndex:
         except Exception as error:
             print('An error has occurred: '+str(error))
             return dict()
-        
-    def __getDictionaryFile(self)->dict:
+
+    def __createFilePath(self,filePath:str)->dict:
+        directory = os.path.dirname(filePath)
+        if not os.path.exists(directory): # if the file path dosent exist
+            print(f'Directory {directory} does not exist. Creating...')
+            os.makedirs(directory) # make the file directory
+
+    def isEmpty(self)->bool:
+            return not bool(len(self.dictionary)) #only empty if not built and file dosen't exist
+
+    def __getDictionaryFile(self)->dict: # gets the metadata file from the directory
         return self.__getFile(self.__objectFilePath)
     
     def __getMetadataFile(self)->dict:
-        return self.__getFile(self.__metadataFilePath)
+        return self.__getFile(self.__metadataFilePath,True)
     
     def __getitem__(self,key:str)->any:
         return self.dictionary.get(key)
@@ -105,3 +122,4 @@ class InvertedIndex:
                 f.writelines(f"\n{words}")
                 for x , y in data.items():
                     f.writelines(f" \n \tdata:{x} - values:{y}")
+

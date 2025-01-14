@@ -23,6 +23,8 @@ class QueryExpansion:
             chosenSynonym = self.__findNounSynonyms(noun)
             if bool(chosenSynonym):
                 self.additionalNouns.append(chosenSynonym)
+        print(f'Expanded with {self.additionalNouns}')
+
         return tokenizedQuery+self.additionalNouns
     def __findNounSynonyms(self,nounWord):
         """Finds the noun synonyms and ranks them from most to least relevant using tf-Idf ranking"""
@@ -42,8 +44,7 @@ class QueryExpansion:
             idf = 1 + np.log((len(self.__metadata) / self.__index[synonym]["totalDocumentFrequency"]))
             tfIdfScore = tf*idf
             synonymsScorePair.append((synonym, tfIdfScore))
-        rankedSynonyms =  sorted(synonymsScorePair, key= lambda x: x[1], reverse=True)
-        print(rankedSynonyms)
+        rankedSynonyms =  sorted(synonymsScorePair, key= lambda x: x[1],reverse=True)
         if len(rankedSynonyms) != 0:
             return rankedSynonyms[0][0]
         else:
