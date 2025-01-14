@@ -2,6 +2,10 @@
 ## By Mugagga Kimera
 
 ### Install
+#### clone repository into a file
+```bash
+git clone https://github.com/muki119/informationSystemsCoursework.git
+```
 ### Unix / Macos
 #### Run these commands
 ```bash
