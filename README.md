@@ -10,7 +10,7 @@ git clone https://github.com/muki119/informationSystemsCoursework.git
 #### Run these commands
 ```bash
 python3 -m venv .venv
-python -m pip install -r requirements.txt 
+python3 -m pip install -r requirements.txt 
 source .venv/bin/activate
 ```
 
@@ -18,7 +18,7 @@ source .venv/bin/activate
 #### Run these commands
 ```bash
 py -m venv .venv
-python -m pip install -r requirements.txt 
+py -m pip install -r requirements.txt 
 .venv/bin/activate
 ```
 
