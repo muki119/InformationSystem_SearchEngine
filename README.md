@@ -26,12 +26,12 @@ py -m pip install -r requirements.txt
 #### By default - stemming will be used and no query expansion will be used
 #### Unix / Macos
 ```bash
-python main.py
+python src/main.py
 ```
 
 #### Windows
 ```bash
-py main.py
+py src/main.py
 ```
 
 # Turning on Lemmatization or Query expansion
